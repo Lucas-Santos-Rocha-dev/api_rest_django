@@ -1,19 +1,22 @@
 import { Component } from "react";
-import {Table} from 'react-bootstrap'
+import {Table} from 'react-bootstrap';
+import api from '../api';
 
 class ListaDeAlunos extends Component {
-    constructor(props){
-        super(props);
-        this.users = [
-            {nome: 'Aluno1', rg: 'Aluno1@test.com', cpf: '111', dt_nasc: '21/05/2021'},
-            {nome: 'Aluno1', rg: 'Aluno1@test.com', cpf: '111', dt_nasc: '21/05/2021'},
-            {nome: 'Aluno1', rg: 'Aluno1@test.com', cpf: '111', dt_nasc: '21/05/2021'},
-            {nome: 'Aluno1', rg: 'Aluno1@test.com', cpf: '111', dt_nasc: '21/05/2021'},
-            
-        ];
+    state = {
+        alunos: [],
+    };
+
+    async componentDidMount(){
+        const response = await api.get('/alunos');
+        this.setState({
+            alunos: response.data
+        });
     }
 
     render() {
+        const {alunos} = this.state;
+
         return (
             <div>
                 <h1>List With Bootstrap Table</h1>
@@ -29,15 +32,15 @@ class ListaDeAlunos extends Component {
 
                     <tbody>
                         {
-                            this.users.map((item, i) => 
+                            alunos.map((item, i) =>
+
                                 <tr key={i}>
                                     <td>{item.nome}</td>
                                     <td>{item.rg}</td>
                                     <td>{item.cpf}</td>
-                                    <td>{item.dt_nasc}</td>
+                                    <td>{item.data_nascimento}</td>
                                 </tr>
                             )
-                            
                         }
                     </tbody>
                 </Table>
