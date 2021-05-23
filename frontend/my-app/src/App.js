@@ -3,6 +3,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import "./assets/App.css"
+import './loader.js'
 
 import ListaDeAlunos from "./components/ListaDeAlunos";
 import Titulo from "./components/Titulo";

@@ -1,6 +1,7 @@
 import { Component } from "react";
 import {Table} from 'react-bootstrap';
 import api from '../../api';
+import $ from 'jquery';
 
 import Button from 'react-bootstrap/Button';
 
@@ -14,6 +15,19 @@ class ListaDeAlunos extends Component {
         this.setState({
             alunos: response.data
         });
+
+        $(document).on('click', '.excluir', function(e) {
+            let id = parseInt($(this).closest('tr').find('td[data-id]').data('id'));
+            let decisao = window.confirm("Deseja realmente excluir ?");
+            if(decisao){
+                let url = "/alunos/" + id;
+                api.delete(url);
+                
+                setTimeout(function(){ window.location.reload(); }, 2000);
+            }
+
+            
+        });
     }
 
     render() {
@@ -24,6 +38,7 @@ class ListaDeAlunos extends Component {
                 <Table>
                     <thead>
                         <tr>
+                            <th className="text-center">ID</th>
                             <th className="text-center">Nome</th>
                             <th className="text-center">RG</th>
                             <th className="text-center">CPF</th>
@@ -37,13 +52,14 @@ class ListaDeAlunos extends Component {
                             alunos.map((item, i) =>
 
                                 <tr key={i}>
+                                    <td data-id={item.id} className="text-center">{item.id}</td>
                                     <td className="text-center">{item.nome}</td>
                                     <td className="text-center">{item.rg}</td>
                                     <td className="text-center">{item.cpf}</td>
                                     <td className="text-center">{item.data_nascimento}</td>
                                     <td className="text-center">
-                                        <Button variant="primary" syze="sm">Editar</Button>{' '}
-                                        <Button variant="primary" syze="sm">Excluir</Button>
+                                        <Button className="editar" variant="primary" syze="sm">Editar</Button>{' '}
+                                        <Button className="excluir" variant="primary" syze="sm">Excluir</Button>
                                     </td>
                                 </tr>
                             )
