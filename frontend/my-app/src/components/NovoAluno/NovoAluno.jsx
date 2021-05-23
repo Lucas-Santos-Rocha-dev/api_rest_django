@@ -85,7 +85,7 @@ class NovoAluno extends Component {
                     </Modal.Body>
 
                     <Modal.Footer>
-                        <Button onClick={() => {this.submitHandler()}}>Close modal</Button>
+                        <Button onClick={() => {this.submitHandler()}}>Cadastrar</Button>
                     </Modal.Footer>
                 </Modal>
             </section>

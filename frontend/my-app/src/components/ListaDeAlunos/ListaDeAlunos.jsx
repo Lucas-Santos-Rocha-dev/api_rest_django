@@ -6,9 +6,13 @@ import $ from 'jquery';
 import Button from 'react-bootstrap/Button';
 
 class ListaDeAlunos extends Component {
-    state = {
-        alunos: [],
-    };
+
+    constructor (){
+        super();
+        this.state ={
+            alunos: [],
+        }
+    }
 
     async componentDidMount(){
         const response = await api.get('/alunos');
@@ -26,7 +30,6 @@ class ListaDeAlunos extends Component {
                 setTimeout(function(){ window.location.reload(); }, 2000);
             }
 
-            
         });
     }
 
@@ -53,10 +56,10 @@ class ListaDeAlunos extends Component {
 
                                 <tr key={i}>
                                     <td data-id={item.id} className="text-center">{item.id}</td>
-                                    <td className="text-center">{item.nome}</td>
-                                    <td className="text-center">{item.rg}</td>
-                                    <td className="text-center">{item.cpf}</td>
-                                    <td className="text-center">{item.data_nascimento}</td>
+                                    <td data-nome={item.nome} className="text-center">{item.nome}</td>
+                                    <td data-rg={item.rg} className="text-center">{item.rg}</td>
+                                    <td data-cpf={item.cpf} className="text-center">{item.cpf}</td>
+                                    <td data-data_nascimento={item.data_nascimento} className="text-center">{item.data_nascimento}</td>
                                     <td className="text-center">
                                         <Button className="editar" variant="primary" syze="sm">Editar</Button>{' '}
                                         <Button className="excluir" variant="primary" syze="sm">Excluir</Button>
