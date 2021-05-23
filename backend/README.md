@@ -45,9 +45,13 @@ Após instalação das dependências, vá para a raiz do projeto, abra o termina
 Após instalação das dependências, vá para a raiz do projeto, abra o terminal e execute o seguinte comando:
 
 #### Linux
+> python3 manage.py makemigrations
+> python3 manage.py migrate
 > python3 manage.py runserver
 
 #### Windows
+> py manage.py makemigrations
+> py manage.py migrate
 > py manage.py runserver
 
  
