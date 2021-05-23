@@ -32,14 +32,23 @@ Antes de começar, é necessário ter instalado as seguintes ferramentas:
 * pip3 install pytz==2021.1
 * pip3 install sqlparse==0.4.1
 
+### Rodando os testes
+Após instalação das dependências, vá para a raiz do projeto, abra o terminal e execute o seguinte comando:
+
+#### Linux
+> python3 manage.py test
+
+#### Windows
+> py manage.py test
+
 ### Rodando o projeto
 Após instalação das dependências, vá para a raiz do projeto, abra o terminal e execute o seguinte comando:
 
 #### Linux
-> python3 app.py
+> python3 manage.py runserver
 
 #### Windows
-> py app.py
+> py manage.py runserver
 
  
 
