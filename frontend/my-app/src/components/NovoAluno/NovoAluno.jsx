@@ -82,7 +82,7 @@ class NovoAluno extends Component {
 
                             <Form.Group controlId="formBasicDataNascimento">
                                 <Form.Label>Data Nascimento</Form.Label>
-                                <Form.Control type="text" placeholder="ex: 2021-05-23" name="data_nascimento" value={this.state.data_nascimento} onChange={this.changeHandler}/>
+                                <Form.Control type="text" placeholder="ex: 24/05/2021" name="data_nascimento" value={this.state.data_nascimento} onChange={this.changeHandler}/>
                             </Form.Group>
                         </Form>
                     </Modal.Body>
