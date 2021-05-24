@@ -79,6 +79,12 @@ class ListaDeAlunos extends Component {
 
     }
 
+    formataData(data){
+        data = data.split("-");
+        let data_com_barra = data[2] + "/" + data[1] + "/" + data[0];
+        return data_com_barra;
+    }
+
     async componentDidMount(){
         const response = await api.get('/alunos');
         this.setState({
@@ -90,11 +96,10 @@ class ListaDeAlunos extends Component {
         const {alunos} = this.state;
 
         return (
-            <section className="margin-top">
+            <section className="margin-top" id="session_tabela">
                 <Table>
                     <thead>
                         <tr>
-                            <th className="text-center">ID</th>
                             <th className="text-center">Nome</th>
                             <th className="text-center">RG</th>
                             <th className="text-center">CPF</th>
@@ -108,11 +113,11 @@ class ListaDeAlunos extends Component {
                             alunos.map((item, i) =>
 
                                 <tr key={i}>
-                                    <td className="text-center">{item.id}</td>
+                                    <td hidden={true} className="text-center">{item.id}</td>
                                     <td className="text-center">{item.nome}</td>
                                     <td className="text-center">{item.rg}</td>
                                     <td className="text-center">{item.cpf}</td>
-                                    <td className="text-center">{item.data_nascimento}</td>
+                                    <td className="text-center">{this.formataData(item.data_nascimento)}</td>
                                     <td className="text-center">
                                         <Button onClick={() => this.updateAluno(item.id, item.nome, item.rg, item.cpf, item.data_nascimento)} variant="primary" syze="sm">Editar</Button>{' '}
                                         <Button onClick={() => this.deleteAluno(item.id)} variant="primary" syze="sm">Excluir</Button>

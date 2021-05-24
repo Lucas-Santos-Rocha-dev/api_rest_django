@@ -28,11 +28,15 @@ class NovoAluno extends Component {
 	}
 
     submitHandler = e => {
+        let data_com_barra = this.state.data_nascimento;
+        data_com_barra = data_com_barra.split("/");
+        let data_sem_barra = data_com_barra[2] + "-" + data_com_barra[1] + "-" + data_com_barra[0];
+
         const data = {
             nome: this.state.nome,
             rg: this.state.rg,
             cpf: this.state.cpf,
-            data_nascimento: this.state.data_nascimento
+            data_nascimento: data_sem_barra
         }
 
         api.post('/alunos/', data)

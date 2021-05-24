@@ -4,8 +4,9 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import "./assets/App.css"
 
+import Header from "./components/Header";
+import Perfil from "./components/Perfil";
 import ListaDeAlunos from "./components/ListaDeAlunos";
-import Titulo from "./components/Titulo";
 import NovoAluno from "./components/NovoAluno";
 
 class App extends Component{
@@ -14,9 +15,19 @@ class App extends Component{
 			<Container>
 				<Row>
 					<Col sm={12}>
-						<Titulo></Titulo>
-						<NovoAluno></NovoAluno>
+						<Header></Header>
+						
+					</Col>
+				</Row>
+
+				<Row>
+					<Col sm={4}>
+						<Perfil></Perfil>
+					</Col>
+
+					<Col sm={8}>
 						<ListaDeAlunos></ListaDeAlunos>
+						<NovoAluno></NovoAluno>
 					</Col>
 				</Row>
 				
