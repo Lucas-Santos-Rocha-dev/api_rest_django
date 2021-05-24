@@ -35,9 +35,8 @@ class NovoAluno extends Component {
             data_nascimento: this.state.data_nascimento
         }
 
-        const response = api.post('/alunos/', data)
+        api.post('/alunos/', data)
         .then(response =>{
-            console.log(response);
             this.setState({
                 show: false
             })
