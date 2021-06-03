@@ -1,174 +1,213 @@
 import { Component } from "react";
-import {Table} from 'react-bootstrap';
-import api from '../../api';
-import {Button, Modal, Form} from 'react-bootstrap';
+import { Table } from "react-bootstrap";
+import { Button, Modal, Form } from "react-bootstrap";
 
 class ListaDeAlunos extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      show: false,
+      id: 0,
+      nome: "",
+      rg: "",
+      cpf: "",
+      data_nascimento: "",
+    };
+  }
 
-    constructor (){
-        super();
-        this.state ={
-            alunos: [],
-            show: false,
-            id: 0,
-            nome: '',
-            rg: '',
-            cpf: '',
-            data_nascimento: ''
-        }
+  _updateAluno(id, nome, rg, cpf, data_nascimento) {
+    this.setState({
+      show: true,
+      id: id,
+      nome: nome,
+      rg: rg,
+      cpf: cpf,
+      data_nascimento: this._formataData(data_nascimento),
+    });
+  }
 
+  _handleModal() {
+    this.setState({
+      show: !this.state.show,
+    });
+  }
+
+  _changeHandler = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  _alterarAluno() {
+    let data_com_barra = this.state.data_nascimento;
+    data_com_barra = data_com_barra.split("/");
+    let data_sem_barra =
+      data_com_barra[2] + "-" + data_com_barra[1] + "-" + data_com_barra[0];
+
+    this.props.alterarAluno(
+      this.state.id,
+      this.state.nome,
+      this.state.rg,
+      this.state.cpf,
+      data_sem_barra
+    );
+
+    this.setState({
+      show: false,
+    });
+  }
+
+  _deletarAluno(id) {
+    let decisao = window.confirm("Deseja realmente excluir ?");
+    if (decisao) {
+      this.props.deletarAluno(id);
     }
+  }
 
-    updateAluno(id, nome, rg, cpf, data_nascimento){
-        this.setState({
-            show: true,
-            id: id,
-            nome: nome,
-            rg: rg,
-            cpf: cpf,
-            data_nascimento: data_nascimento
-        })
-    }
+  _formataData(data) {
+    data = data.split("-");
+    let data_com_barra = data[2] + "/" + data[1] + "/" + data[0];
+    return data_com_barra;
+  }
 
-    deleteAluno(id){
-        let decisao = window.confirm("Deseja realmente excluir ?");
-        if(decisao){
-            api.delete(`alunos/${id}/`)
-            .then(response =>{
-                console.log(response);
-                window.location.reload();
-            })
-            .catch(error => {
-                console.log(error);
-            })
-        }
-    }
+  render() {
+    return (
+      <section className="margin-top" id="session_tabela">
+        <Table>
+          <thead>
+            <tr>
+              <th className="text-center">Nome</th>
+              <th className="text-center">RG</th>
+              <th className="text-center">CPF</th>
+              <th className="text-center">Data de Nascimento</th>
+              <th className="text-center">Ações</th>
+            </tr>
+          </thead>
 
-    handleModal(){
-		this.setState({
-			show: !this.state.show
-		});
-	}
+          <tbody>
+            {this.props.alunos.map((item, i) => (
+              <tr key={i}>
+                <td hidden={true} className="text-center">
+                  {item.id}
+                </td>
+                <td className="text-center">{item.nome}</td>
+                <td className="text-center">{item.rg}</td>
+                <td className="text-center">{item.cpf}</td>
+                <td className="text-center">
+                  {this._formataData(item.data_nascimento)}
+                </td>
+                <td className="text-center">
+                  <Button
+                    onClick={() =>
+                      this._updateAluno(
+                        item.id,
+                        item.nome,
+                        item.rg,
+                        item.cpf,
+                        item.data_nascimento
+                      )
+                    }
+                    variant="primary"
+                    syze="sm"
+                  >
+                    Editar
+                  </Button>{" "}
+                  <Button
+                    onClick={() => this._deletarAluno(item.id)}
+                    variant="primary"
+                    syze="sm"
+                  >
+                    Excluir
+                  </Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
 
-    changeHandler = (e) => {
-        this.setState({
-            [e.target.name]: e.target.value 
-        })
-    }
+        <Modal
+          show={this.state.show}
+          onHide={() => {
+            this._handleModal();
+          }}
+        >
+          <Modal.Header closeButton>Alterar aluno</Modal.Header>
 
-    submitHandler = e => {
-        const data = {
-            nome: this.state.nome,
-            rg: this.state.rg,
-            cpf: this.state.cpf,
-            data_nascimento: this.state.data_nascimento
-        }
+          <Modal.Body>
+            <Form>
+              <Form.Group controlId="formBasicId">
+                <Form.Label>ID</Form.Label>
+                <Form.Control
+                  type="text"
+                  disabled={true}
+                  name="id"
+                  value={this.state.id}
+                />
+              </Form.Group>
 
-        api.put(`alunos/${this.state.id}/`, data)
-        .then(response =>{
-            console.log(response);
-            this.setState({
-                show: false
-            })
+              <Form.Group controlId="formBasicNome">
+                <Form.Label>Nome</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Insira o nome"
+                  name="nome"
+                  maxLength="30"
+                  value={this.state.nome}
+                  onChange={this._changeHandler}
+                />
+              </Form.Group>
 
-            window.location.reload();
-        })
-        .catch(error => {
-            console.log(error);
-        })
+              <Form.Group controlId="formBasicRG">
+                <Form.Label>RG</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Insira o RG"
+                  name="rg"
+                  maxLength="9"
+                  value={this.state.rg}
+                  onChange={this._changeHandler}
+                />
+              </Form.Group>
 
-    }
+              <Form.Group controlId="formBasicCPF">
+                <Form.Label>CPF</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Insira o CPF"
+                  name="cpf"
+                  maxLength="11"
+                  value={this.state.cpf}
+                  onChange={this._changeHandler}
+                />
+              </Form.Group>
 
-    formataData(data){
-        data = data.split("-");
-        let data_com_barra = data[2] + "/" + data[1] + "/" + data[0];
-        return data_com_barra;
-    }
+              <Form.Group controlId="formBasicDataNascimento">
+                <Form.Label>Data Nascimento</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="ex: 24/05/2021"
+                  name="data_nascimento"
+                  maxLength="10"
+                  value={this.state.data_nascimento}
+                  onChange={this._changeHandler}
+                />
+              </Form.Group>
+            </Form>
+          </Modal.Body>
 
-    async componentDidMount(){
-        const response = await api.get('/alunos');
-        this.setState({
-            alunos: response.data
-        });
-    }
-
-    render() {
-        const {alunos} = this.state;
-
-        return (
-            <section className="margin-top" id="session_tabela">
-                <Table>
-                    <thead>
-                        <tr>
-                            <th className="text-center">Nome</th>
-                            <th className="text-center">RG</th>
-                            <th className="text-center">CPF</th>
-                            <th className="text-center">Data de Nascimento</th>
-                            <th className="text-center">Ações</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {
-                            alunos.map((item, i) =>
-
-                                <tr key={i}>
-                                    <td hidden={true} className="text-center">{item.id}</td>
-                                    <td className="text-center">{item.nome}</td>
-                                    <td className="text-center">{item.rg}</td>
-                                    <td className="text-center">{item.cpf}</td>
-                                    <td className="text-center">{this.formataData(item.data_nascimento)}</td>
-                                    <td className="text-center">
-                                        <Button onClick={() => this.updateAluno(item.id, item.nome, item.rg, item.cpf, item.data_nascimento)} variant="primary" syze="sm">Editar</Button>{' '}
-                                        <Button onClick={() => this.deleteAluno(item.id)} variant="primary" syze="sm">Excluir</Button>
-                                    </td>
-                                </tr>
-                            )
-                        }
-                    </tbody>
-                </Table>
-
-                <Modal show={this.state.show} onHide={() => {this.handleModal()}}>
-                    <Modal.Header closeButton>
-                        Alterar aluno
-                    </Modal.Header>
-
-                    <Modal.Body>
-                        <Form>
-                            <Form.Group controlId="formBasicId">
-                                <Form.Label>ID</Form.Label>
-                                <Form.Control type="text" disabled={true} name="nome" value={this.state.id} onChange={this.changeHandler}/>
-                            </Form.Group>
-
-                            <Form.Group controlId="formBasicNome">
-                                <Form.Label>Nome</Form.Label>
-                                <Form.Control type="text" placeholder="Insira o nome" name="nome" value={this.state.nome} onChange={this.changeHandler}/>
-                            </Form.Group>
-
-                            <Form.Group controlId="formBasicRG">
-                                <Form.Label>RG</Form.Label>
-                                <Form.Control type="text" placeholder="Insira o RG" name="rg" value={this.state.rg} onChange={this.changeHandler}/>
-                            </Form.Group>
-
-                            <Form.Group controlId="formBasicCPF">
-                                <Form.Label>CPF</Form.Label>
-                                <Form.Control type="text" placeholder="Insira o CPF" name="cpf" value={this.state.cpf} onChange={this.changeHandler}/>
-                            </Form.Group>
-
-                            <Form.Group controlId="formBasicDataNascimento">
-                                <Form.Label>Data Nascimento</Form.Label>
-                                <Form.Control type="text" placeholder="ex: 2021-05-23" name="data_nascimento" value={this.state.data_nascimento} onChange={this.changeHandler}/>
-                            </Form.Group>
-                        </Form>
-                    </Modal.Body>
-
-                    <Modal.Footer>
-                        <Button onClick={() => {this.submitHandler()}}>Alterar</Button>
-                    </Modal.Footer>
-                </Modal>
-            </section>
-        )
-    }
+          <Modal.Footer>
+            <Button
+              onClick={() => {
+                this._alterarAluno();
+              }}
+            >
+              Alterar
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </section>
+    );
+  }
 }
 
 export default ListaDeAlunos;
